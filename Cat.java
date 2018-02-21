@@ -1,4 +1,4 @@
-package q2;
+package q2Monitors;
 
 public class Cat extends CatPart {
 	

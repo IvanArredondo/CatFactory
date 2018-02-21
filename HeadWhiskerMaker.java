@@ -1,24 +1,33 @@
-package q2;
+package q2Monitors;
+
+import java.util.Random;
 
 public class HeadWhiskerMaker extends Thread {
 
 	Head head;
+	Random random;
+	private long startTime;
+	public long waitingTime = 0;
 
 	public HeadWhiskerMaker() {
-		// TODO Auto-generated constructor stub
+		random = new Random();
 	}
 
 	public void run() {
 		while(Main.keepMaking.get()) {
+			startTime = System.currentTimeMillis();
 			synchronized (Main.headEyeBin) {
-				if(!Main.headEyeBin.catPartList.isEmpty()) {
-					head = (Head)Main.headEyeBin.catPartList.get(Main.headEyeBin.catPartList.size()-1);
+				waitingTime += System.currentTimeMillis()-startTime;
+				if(!Main.headEyeBin.catPartList.isEmpty()) {	//checking to see if theres any head with eyes in the bin
+					head = (Head)Main.headEyeBin.catPartList.get(Main.headEyeBin.catPartList.size()-1);	
 					Main.headEyeBin.catPartList.remove(Main.headEyeBin.catPartList.size()-1);
 				}
 			}
-			if(head == null) {
+			if(head == null) {	//if theres no heads with eyes
+				startTime = System.currentTimeMillis();
 				synchronized (Main.headBin) {
-					head = (Head)Main.headBin.getCatPart();
+					waitingTime += System.currentTimeMillis()-startTime;	//time spent waiting for the lock
+					head = (Head)Main.headBin.getCatPart();	//grab a head from the infinite heads bin
 				}
 				getWhisker();	//repeated to ensure fairness
 				getWhisker();
@@ -26,27 +35,38 @@ public class HeadWhiskerMaker extends Thread {
 				getWhisker();
 				getWhisker();
 				getWhisker();
+				startTime = System.currentTimeMillis();
 				synchronized (Main.headWhiskersBin) {
-					Main.headWhiskersBin.addPart(head);
+					waitingTime += System.currentTimeMillis()-startTime;
+					Main.headWhiskersBin.addPart(head);	//add the head with whiskers to the head whiskers bin
 				}
-			}else {
+			}else {	//if there was a head with whiskers available
 				getWhisker();	//repeated to ensure fairness
 				getWhisker();
 				getWhisker();
 				getWhisker();
 				getWhisker();
 				getWhisker();
+				startTime = System.currentTimeMillis();
 				synchronized (Main.completedHeadBin) {
-					Main.completedHeadBin.addPart(head);
+					waitingTime += System.currentTimeMillis()-startTime;
+					Main.completedHeadBin.addPart(head);	//add it to the completed head bin and notify the cat maker
 					Main.completedHeadBin.notify();
 				}
+			}
+			try {
+				Thread.sleep(random.nextInt(41) + 20);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
 			}
 		}
 	}
 	
 	public void getWhisker() {
+		startTime = System.currentTimeMillis();
 		synchronized (Main.whiskerBin) {
-			head.addWhisker((Whisker)Main.whiskerBin.getCatPart());
+			waitingTime += System.currentTimeMillis()-startTime;
+			head.addWhisker((Whisker)Main.whiskerBin.getCatPart());	//get whiskers from the infinite whiskers bin
 		}
 	}
 

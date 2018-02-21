@@ -1,4 +1,4 @@
-package q2;
+package q2Monitors;
 
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -24,14 +24,14 @@ public class Main {
 	static Bin completedHeadBin;
 	
 	static Bin completedCatBin;
-	
-	
 
 	static AtomicInteger counter;
 	static AtomicBoolean keepMaking; 
+	
+	public static long startTime;
+	public static long totalTime;
 
 	public Main() {
-		// TODO Auto-generated constructor stub
 	}
 
 	public static void main(String[] args) {
@@ -39,7 +39,7 @@ public class Main {
 		keepMaking = new AtomicBoolean(true);
 		counter = new AtomicInteger(0);
 
-
+		//creating all the bins
 		bodyBin = new Bin(new Body());
 		eyeBin = new Bin(new Eye());
 		headBin = new Bin(new Head());
@@ -60,6 +60,7 @@ public class Main {
 		
 		completedCatBin = new Bin(new Cat());
 		
+		//creating all the threads/robots
 		LegMaker legMaker1 = new LegMaker();
 		LegMaker legMaker2 = new LegMaker();
 
@@ -77,6 +78,8 @@ public class Main {
 		
 		CatMaker catMaker = new CatMaker();
 		
+		startTime = System.currentTimeMillis();
+		
 		legMaker1.start();
 		legMaker2.start();
 		bodyLegMaker1.start();
@@ -89,13 +92,6 @@ public class Main {
 		headWhiskerMaker2.start();
 		catMaker.start();
 	
-				try {
-					Thread.sleep(2000);
-					keepMaking.set(false);
-				} catch (InterruptedException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-				}
 		try {
 			legMaker1.join();
 			legMaker2.join();
@@ -114,10 +110,24 @@ public class Main {
 			e.printStackTrace();
 		}
 		
-		System.out.println("bodies : " + completedCatBin.catPartList.size());
-		for (int i = 0; i < completedCatBin.catPartList.size(); i++) {
-			System.out.println(i);
-		}
+		totalTime = System.currentTimeMillis()-startTime;
+		
+		System.out.println("Number of cats made: " + completedCatBin.catPartList.size());
+		
+		System.out.println("Program total time: " + totalTime);
+		
+		System.out.println("legMaker1 percent of total time idle: " + (double)legMaker1.waitingTime/totalTime*100.0);
+		System.out.println("legMaker2 percent of total time idle: " + (double)legMaker2.waitingTime/totalTime*100.0);
+		System.out.println("bodyLegMaker1 percent of total time idle: " + (double)bodyLegMaker1.waitingTime/totalTime*100.0);
+		System.out.println("bodyLegMaker2 percent of total time idle: " + (double)bodyLegMaker2.waitingTime/totalTime*100.0);
+		System.out.println("bodyTailMaker1 percent of total time idle: " + (double)bodyTailMaker1.waitingTime/totalTime*100.0);
+		System.out.println("bodyTailMaker2 percent of total time idle: " + (double)bodyTailMaker2.waitingTime/totalTime*100.0);
+		System.out.println("headEyeMaker1 percent of total time idle: " + (double)headEyeMaker1.waitingTime/totalTime*100.0);
+		System.out.println("headEyeMaker2 percent of total time idle: " + (double)headEyeMaker2.waitingTime/totalTime*100.0);
+		System.out.println("headWhiskerMaker1 percent of total time idle: " + (double)headWhiskerMaker1.waitingTime/totalTime*100.0);
+		System.out.println("headWhiskerMaker2 percent of total time idle: " + (double)headWhiskerMaker2.waitingTime/totalTime*100.0);
+		System.out.println("catMaker percent of total time idle: " + (double)catMaker.waitingTime/totalTime*100.0);
+		
 	}
 	
 }

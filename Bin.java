@@ -1,4 +1,4 @@
-package q2;
+package q2Monitors;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
@@ -10,6 +10,7 @@ public class Bin {
 	public Bin(CatPart catPart) {
 		this.catPart = catPart;
 
+		//creating a bin with an arraylist of the type of the bin being created
 		if(catPart instanceof Body){
 			catPartList = new ArrayList<Body>();
 		}
@@ -38,6 +39,7 @@ public class Bin {
 	}
 
 	public CatPart getCatPart() {
+		//returns an infinite number of new instances depending on what type the bin is
 		if(catPart instanceof Body){
 			return new Body();
 		}
@@ -68,6 +70,7 @@ public class Bin {
 	
 	@SuppressWarnings("unchecked")
 	public void addPart(CatPart catPart) {
+		//used to add to the list of intermediate cat part objects
 		this.catPartList.add(catPart);
 	}
 }
