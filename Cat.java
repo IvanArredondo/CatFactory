@@ -6,7 +6,6 @@ public class Cat extends CatPart {
 	Head head;
 
 	public Cat() {
-		// TODO Auto-generated constructor stub
 	}
 
 	public void whatAmI() {

@@ -14,7 +14,7 @@ public class BodyLegMaker extends Thread {
 	public void run() {
 		while(Main.keepMaking.get()) {
 			synchronized (Main.bodyTailBin) {
-				if(Main.bodyTailBin.catPartList.size() > 0) {
+				if(!Main.bodyTailBin.catPartList.isEmpty()) {
 					body = (Body) Main.bodyTailBin.catPartList.get(Main.bodyTailBin.catPartList.size() -1 );
 					Main.bodyTailBin.catPartList.remove(Main.bodyTailBin.catPartList.size() -1);
 				}
@@ -27,8 +27,8 @@ public class BodyLegMaker extends Thread {
 				getHindLeg();
 				getForeLeg();
 				getHindLeg();
-				synchronized (Main.bodyLegbin) {
-					Main.bodyLegbin.addPart(body);
+				synchronized (Main.bodyLegBin) {
+					Main.bodyLegBin.addPart(body);
 				}
 			}else {
 				getForeLeg();
@@ -37,6 +37,7 @@ public class BodyLegMaker extends Thread {
 				getHindLeg();
 				synchronized (Main.completedBodyBin) {
 					Main.completedBodyBin.addPart(body);
+					Main.completedBodyBin.notify();
 				}
 			}
 			
@@ -46,7 +47,7 @@ public class BodyLegMaker extends Thread {
 	
 	public void getForeLeg() {
 		synchronized (Main.foreLegBin) {
-			while(Main.foreLegBin.catPartList.size() == 0) {
+			while(Main.foreLegBin.catPartList.isEmpty()) {
 				try {
 					Main.foreLegBin.wait();
 				} catch (InterruptedException e) {
@@ -60,7 +61,7 @@ public class BodyLegMaker extends Thread {
 	}
 	public void getHindLeg() {
 		synchronized (Main.hindLegBin) {
-			while(Main.hindLegBin.catPartList.size() == 0) {
+			while(Main.hindLegBin.catPartList.isEmpty()) {
 				try {
 					Main.hindLegBin.wait();
 				} catch (InterruptedException e) {

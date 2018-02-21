@@ -30,6 +30,8 @@ public class Bin {
 		}
 		else if(catPart instanceof Tail){
 			catPartList = new ArrayList<Tail>();
+		}else if(catPart instanceof Cat){
+			catPartList = new ArrayList<Cat>();
 		}else {
 			System.out.println("please dont put the catpart superclass");
 		}
@@ -56,6 +58,9 @@ public class Bin {
 		}
 		else if(catPart instanceof Tail){
 			return new Tail();
+		}
+		else if(catPart instanceof Cat){
+			return new Cat();
 		}else {
 			return null;
 		}
