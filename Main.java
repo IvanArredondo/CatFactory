@@ -12,6 +12,17 @@ public class Main {
 	static Bin toeBin;
 	static Bin whiskerBin;
 	
+	static Bin foreLegBin;
+	static Bin hindLegBin;
+	static Bin bodyTailBin;
+	static Bin bodyLegbin;
+	static Bin completedBodyBin;
+	static Bin headBodyBin;
+	static Bin eyeBodyBin;
+	static Bin completedHeadBin;
+	
+	
+	
 	public static AtomicBoolean keepMaking; 
 
 	public Main() {
@@ -29,6 +40,15 @@ public class Main {
 		tailBin = new Bin(new Tail());
 		toeBin = new Bin(new Toe());
 		whiskerBin = new Bin(new Whisker());
+		
+		foreLegBin = new Bin(new Leg());
+		hindLegBin = new Bin(new Leg());
+		bodyTailBin = new Bin(new Body());
+		bodyLegbin = new Bin(new Body());
+		completedBodyBin = new Bin(new Body());
+		headBodyBin = new Bin(new Head());
+		eyeBodyBin = new Bin(new Head());
+		completedHeadBin = new Bin(new Head());
 		
 		BodyLegMaker bodyLegMaker1 = new BodyLegMaker();
 		BodyLegMaker bodyLegMaker2 = new BodyLegMaker();
